@@ -1,0 +1,66 @@
+{
+    "info": {
+        "_postman_id": "b1a2f3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+        "name": "Core API - User Authentication",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Create User",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"securePassword123\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:3000/users",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "users"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Login User",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"securePassword123\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:3000/auth/login",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "auth",
+                        "login"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}
