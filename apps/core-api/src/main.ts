@@ -12,7 +12,7 @@ async function bootstrap() {
             'http://localhost:3000',
             'http://localhost:3001',
             'https://codeswayam.com',
-            /\.codeswayam\.com$/
+            /^https:\/\/(.*\.)?codeswayam\.com$/
         ],
         credentials: true,
     });
