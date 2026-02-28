@@ -1563,14 +1563,19 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.use(cookieParser());
     app.enableCors({
-        origin: [
-            'http://localhost:3000',
-            'http://localhost:3001',
-            'https://app.codeswayam.com',
-            'https://account.codeswayam.com',
-            'https://mailtracker.codeswayam.com',
-            'https://auraflow.codeswayam.com'
-        ],
+        origin: (origin, callback) => {
+            if (!origin)
+                return callback(null, true);
+            const allowedDomain = /^(https?:\/\/)?(.*\.)?codeswayam\.com$/;
+            if (allowedDomain.test(origin) || origin.includes('localhost')) {
+                callback(null, true);
+            }
+            else {
+                console.error(`CORS blocked for origin: ${origin}`);
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
         credentials: true,
     });
     const port = process.env.PORT || 3000;
