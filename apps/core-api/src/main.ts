@@ -11,10 +11,8 @@ async function bootstrap() {
         origin: [
             'http://localhost:3000',
             'http://localhost:3001',
-            'https://app.codeswayam.com',
-            'https://account.codeswayam.com',
-            'https://mailtracker.codeswayam.com',
-            'https://auraflow.codeswayam.com'
+            'https://codeswayam.com',
+            /\.codeswayam\.com$/
         ],
         credentials: true,
     });
