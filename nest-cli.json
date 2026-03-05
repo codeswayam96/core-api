@@ -4,7 +4,7 @@
   "sourceRoot": "apps/core-api/src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true,
+    "webpack": false,
     "tsConfigPath": "apps/core-api/tsconfig.app.json"
   },
   "monorepo": true,
@@ -26,6 +26,15 @@
       "sourceRoot": "libs/database/src",
       "compilerOptions": {
         "tsConfigPath": "libs/database/tsconfig.lib.json"
+      }
+    },
+    "ems-api": {
+      "type": "application",
+      "root": "apps/ems-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/ems-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ems-api/tsconfig.app.json"
       }
     },
     "instadm-api": {

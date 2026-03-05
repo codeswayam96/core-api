@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DrizzleModule } from '@shared/database';
+import { DrizzleModule } from '@core/database';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({

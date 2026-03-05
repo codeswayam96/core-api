@@ -19,10 +19,10 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "node",
     "paths": {
-      "@shared/database": [
+      "@core/database": [
         "libs/database/src"
       ],
-      "@shared/database/*": [
+      "@core/database/*": [
         "libs/database/src/*"
       ]
     }

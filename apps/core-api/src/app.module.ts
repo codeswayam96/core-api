@@ -12,9 +12,9 @@ import { SaasProductsModule } from './modules/saas-products/saas-products.module
 
 @Module({
     imports: [
-        ConfigModule.forRoot({
+        (ConfigModule.forRoot({
             isGlobal: true,
-        }),
+        }) as any),
         BullModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({
