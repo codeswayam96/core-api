@@ -27,4 +27,30 @@ export class AdminService {
         if (!user) throw new NotFoundException('User not found');
         return user;
     }
+
+    async getAuthSettings() {
+        const settings = await this.db.select().from(schema.appSettings).limit(1);
+        if (settings.length === 0) {
+            // Use defaults if missing
+            return { authType: 'clerk' };
+        }
+        return settings[0];
+    }
+
+    async updateAuthSettings(authType: string) {
+        let settings = await this.getAuthSettings();
+        const existing = await this.db.select().from(schema.appSettings).limit(1);
+
+        if (existing.length === 0) {
+            const [newSettings] = await this.db.insert(schema.appSettings).values({ authType }).returning();
+            return newSettings;
+        }
+
+        const [updated] = await this.db.update(schema.appSettings)
+            .set({ authType })
+            .where(eq(schema.appSettings.id, existing[0].id))
+            .returning();
+
+        return updated;
+    }
 }

@@ -1,0 +1,13 @@
+apps/aura-api/src/aura-api.controller.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/src/modules/auth/jwt-auth.guard.ts(2,29): error TS2307: Cannot find module '@clerk/backend' or its corresponding type declarations.
+apps/aura-api/src/modules/automations/automations.controller.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/src/modules/automations/automations.service.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/src/modules/integrations/integrations.controller.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/src/modules/integrations/integrations.service.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/src/modules/webhooks/webhooks.controller.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/src/modules/webhooks/webhooks.service.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/test/app.e2e-spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/aura-api/test/app.e2e-spec.ts(3,26): error TS2307: Cannot find module 'supertest' or its corresponding type declarations.
+apps/ems-api/src/ems-api.controller.spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/ems-api/test/app.e2e-spec.ts(1,37): error TS2307: Cannot find module '@nestjs/testing' or its corresponding type declarations.
+apps/ems-api/test/app.e2e-spec.ts(3,26): error TS2307: Cannot find module 'supertest' or its corresponding type declarations.

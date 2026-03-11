@@ -23,4 +23,16 @@ export class AdminController {
     ) {
         return this.adminService.updateUserRole(id, role);
     }
+
+    @Get('settings/auth')
+    @Roles('admin', 'superadmin')
+    async getAuthSettings() {
+        return this.adminService.getAuthSettings();
+    }
+
+    @Patch('settings/auth')
+    @Roles('superadmin') // Only superadmin should change auth mode
+    async updateAuthSettings(@Body('authType') authType: string) {
+        return this.adminService.updateAuthSettings(authType);
+    }
 }

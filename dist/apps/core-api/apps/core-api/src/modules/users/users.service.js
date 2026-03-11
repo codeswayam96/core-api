@@ -11,6 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
@@ -28,8 +39,53 @@ let UsersService = class UsersService {
         });
         return result || null;
     }
+    async findById(id) {
+        const result = await this.db.query.users.findFirst({
+            where: (0, drizzle_orm_1.eq)(schema.users.id, id),
+        });
+        if (result) {
+            const { password } = result, user = __rest(result, ["password"]);
+            return user;
+        }
+        return null;
+    }
     async create(data) {
         const [user] = await this.db.insert(schema.users).values(data).returning();
+        return user;
+    }
+    async upsertGoogleUser(googleId, email, name) {
+        const existing = await this.findOne(email);
+        if (existing) {
+            if (!existing.googleId) {
+                const [updated] = await this.db.update(schema.users)
+                    .set({ googleId, name: existing.name || name })
+                    .where((0, drizzle_orm_1.eq)(schema.users.id, existing.id))
+                    .returning();
+                return updated;
+            }
+            return existing;
+        }
+        const [user] = await this.db.insert(schema.users).values({
+            email,
+            googleId,
+            name,
+            password: '',
+        }).returning();
+        return user;
+    }
+    async createFromClerk(clerkId, email) {
+        const existing = await this.findOne(email);
+        if (existing) {
+            if (!existing.clerkId) {
+                await this.db.update(schema.users).set({ clerkId }).where((0, drizzle_orm_1.eq)(schema.users.id, existing.id));
+            }
+            return existing;
+        }
+        const [user] = await this.db.insert(schema.users).values({
+            email,
+            clerkId,
+            password: '',
+        }).returning();
         return user;
     }
 };

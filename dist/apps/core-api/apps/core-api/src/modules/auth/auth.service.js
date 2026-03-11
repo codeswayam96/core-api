@@ -24,10 +24,39 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
+const google_auth_library_1 = require("google-auth-library");
+const config_1 = require("@nestjs/config");
 let AuthService = class AuthService {
-    constructor(usersService, jwtService) {
+    constructor(usersService, jwtService, configService) {
         this.usersService = usersService;
         this.jwtService = jwtService;
+        this.configService = configService;
+        this.googleClient = new google_auth_library_1.OAuth2Client(this.configService.get('GOOGLE_CLIENT_ID'));
+    }
+    async verifyGoogleToken(token) {
+        try {
+            const ticket = await this.googleClient.verifyIdToken({
+                idToken: token,
+                audience: this.configService.get('GOOGLE_CLIENT_ID'),
+            });
+            return ticket.getPayload();
+        }
+        catch (error) {
+            return null;
+        }
+    }
+    async googleLogin(idToken) {
+        const payload = await this.verifyGoogleToken(idToken);
+        if (!payload)
+            return null;
+        const { sub: googleId, email, name } = payload;
+        if (!email)
+            return null;
+        const user = await this.usersService.upsertGoogleUser(googleId, email, name || '');
+        const jwtPayload = { username: user.email, sub: user.id, role: user.role };
+        return {
+            access_token: this.jwtService.sign(jwtPayload),
+        };
     }
     async validateUser(email, pass) {
         const user = await this.usersService.findOne(email);
@@ -37,8 +66,8 @@ let AuthService = class AuthService {
         }
         return null;
     }
-    async signup(email, pass) {
-        return await this.usersService.create({ email, password: pass });
+    async signup(email, pass, name) {
+        return await this.usersService.create({ email, password: pass, name });
     }
     async login(user) {
         const payload = { username: user.email, sub: user.id, role: user.role };
@@ -51,6 +80,7 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [users_service_1.UsersService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        config_1.ConfigService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

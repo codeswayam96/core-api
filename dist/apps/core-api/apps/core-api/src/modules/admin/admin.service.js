@@ -40,6 +40,26 @@ let AdminService = class AdminService {
             throw new common_1.NotFoundException('User not found');
         return user;
     }
+    async getAuthSettings() {
+        const settings = await this.db.select().from(schema.appSettings).limit(1);
+        if (settings.length === 0) {
+            return { authType: 'clerk' };
+        }
+        return settings[0];
+    }
+    async updateAuthSettings(authType) {
+        let settings = await this.getAuthSettings();
+        const existing = await this.db.select().from(schema.appSettings).limit(1);
+        if (existing.length === 0) {
+            const [newSettings] = await this.db.insert(schema.appSettings).values({ authType }).returning();
+            return newSettings;
+        }
+        const [updated] = await this.db.update(schema.appSettings)
+            .set({ authType })
+            .where((0, drizzle_orm_1.eq)(schema.appSettings.id, existing[0].id))
+            .returning();
+        return updated;
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([

@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 @Module({
   imports: [SharedModule],
   controllers: [AdminController],
-  providers: [AdminService]
+  providers: [AdminService],
+  exports: [AdminService]
 })
 export class AdminModule { }

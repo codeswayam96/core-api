@@ -1,5 +1,6 @@
-import { Controller, Post, Body, Res, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Body, Res, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AdminService } from '../admin/admin.service';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 
@@ -8,11 +9,17 @@ export class AuthController {
     constructor(
         private authService: AuthService,
         private configService: ConfigService,
+        private adminService: AdminService,
     ) { }
+
+    @Get('settings')
+    async getSettings() {
+        return this.adminService.getAuthSettings();
+    }
 
     @Post('signup')
     async signup(@Body() body: any, @Res({ passthrough: true }) response: Response) {
-        const user = await this.authService.signup(body.email, body.password);
+        const user = await this.authService.signup(body.email, body.password, body.name);
         if (!user) {
             throw new UnauthorizedException('User creation failed');
         }
@@ -42,6 +49,28 @@ export class AuthController {
         const { access_token } = await this.authService.login(user);
 
         // Configure cookie for cross-subdomain access
+        const domain = this.configService.get<string>('COOKIE_DOMAIN') || 'localhost';
+        console.log(domain);
+
+        response.cookie('Authentication', access_token, {
+            httpOnly: true,
+            domain: domain === 'localhost' ? undefined : domain,
+            path: '/',
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+        });
+
+        return { message: 'Logged in successfully' };
+    }
+
+    @Post('google')
+    async googleLogin(@Body('token') token: string, @Res({ passthrough: true }) response: Response) {
+        const authResult = await this.authService.googleLogin(token);
+        if (!authResult) {
+            throw new UnauthorizedException('Google authentication failed');
+        }
+
+        const { access_token } = authResult;
         const domain = this.configService.get<string>('COOKIE_DOMAIN') || 'localhost';
 
         response.cookie('Authentication', access_token, {

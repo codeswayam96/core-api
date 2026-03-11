@@ -10,6 +10,15 @@
   "monorepo": true,
   "root": "apps/core-api",
   "projects": {
+    "aura-api": {
+      "type": "application",
+      "root": "apps/aura-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/aura-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/aura-api/tsconfig.app.json"
+      }
+    },
     "core-api": {
       "type": "application",
       "root": "apps/core-api",

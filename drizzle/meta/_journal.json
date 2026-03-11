@@ -15,6 +15,13 @@
       "when": 1771937196407,
       "tag": "0001_wooden_miss_america",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772769073264,
+      "tag": "0002_lumpy_marauders",
+      "breakpoints": true
     }
   ]
 }

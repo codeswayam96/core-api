@@ -1,10 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsRelations = exports.autoRepliesRelations = exports.trackingLogsRelations = exports.sessionsRelations = exports.usersRelations = exports.saasProducts = exports.blogs = exports.autoReplies = exports.trackingLogs = exports.sessions = exports.users = exports.roleEnum = exports.emsSheetRows = exports.emsMeetingAttendees = exports.emsMeetings = exports.emsMeetingStatusEnum = exports.emsSheetColumns = exports.emsSheets = exports.emsSubmissions = exports.emsTasks = exports.emsTasksStatusEnum = exports.emsPageActivities = exports.emsSessions = exports.emsUsers = exports.emsRoleEnum = exports.emsSchema = exports.instadmSchema = exports.mailtrackerSchema = void 0;
+exports.emsSheetRows = exports.emsMeetingAttendees = exports.emsMeetings = exports.emsMeetingStatusEnum = exports.emsSheetColumns = exports.emsSheets = exports.emsSubmissions = exports.emsTasks = exports.emsTasksStatusEnum = exports.emsPageActivities = exports.emsSessions = exports.emsUsers = exports.emsRoleEnum = exports.emsSchema = void 0;
 const pg_core_1 = require("drizzle-orm/pg-core");
-const drizzle_orm_1 = require("drizzle-orm");
-exports.mailtrackerSchema = (0, pg_core_1.pgSchema)('mailtracker');
-exports.instadmSchema = (0, pg_core_1.pgSchema)('instadm');
 exports.emsSchema = (0, pg_core_1.pgSchema)('ems');
 exports.emsRoleEnum = (0, pg_core_1.pgEnum)('ems_role', ['intern', 'team_leader', 'manager', 'cto', 'cfo', 'coo', 'ceo', 'admin']);
 exports.emsUsers = exports.emsSchema.table('ems_users', {
@@ -90,87 +87,4 @@ exports.emsSheetRows = exports.emsSchema.table('ems_sheet_rows', {
     createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow(),
 });
-exports.roleEnum = (0, pg_core_1.pgEnum)('role', ['user', 'admin', 'superadmin']);
-exports.users = (0, pg_core_1.pgTable)('users', {
-    id: (0, pg_core_1.serial)('id').primaryKey(),
-    email: (0, pg_core_1.text)('email').unique().notNull(),
-    password: (0, pg_core_1.text)('password').notNull(),
-    role: (0, exports.roleEnum)('role').default('user').notNull(),
-    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
-});
-exports.sessions = (0, pg_core_1.pgTable)('sessions', {
-    id: (0, pg_core_1.serial)('id').primaryKey(),
-    token: (0, pg_core_1.text)('token').unique().notNull(),
-    userId: (0, pg_core_1.integer)('user_id').notNull().references(() => exports.users.id),
-    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
-});
-exports.trackingLogs = exports.mailtrackerSchema.table('tracking_logs', {
-    id: (0, pg_core_1.serial)('id').primaryKey(),
-    action: (0, pg_core_1.text)('action').notNull(),
-    userId: (0, pg_core_1.integer)('user_id').notNull().references(() => exports.users.id),
-    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
-});
-exports.autoReplies = exports.instadmSchema.table('auto_replies', {
-    id: (0, pg_core_1.serial)('id').primaryKey(),
-    message: (0, pg_core_1.text)('message').notNull(),
-    userId: (0, pg_core_1.integer)('user_id').notNull().references(() => exports.users.id),
-    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
-});
-exports.blogs = (0, pg_core_1.pgTable)('blogs', {
-    id: (0, pg_core_1.serial)('id').primaryKey(),
-    saas: (0, pg_core_1.text)('saas').notNull(),
-    tag: (0, pg_core_1.text)('tag').notNull(),
-    title: (0, pg_core_1.text)('title').notNull(),
-    slug: (0, pg_core_1.text)('slug').notNull(),
-    excerpt: (0, pg_core_1.text)('excerpt').notNull(),
-    content: (0, pg_core_1.text)('content').notNull(),
-    featured: (0, pg_core_1.text)('featured').notNull().default('false'),
-    authorId: (0, pg_core_1.integer)('author_id').notNull().references(() => exports.users.id),
-    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow(),
-});
-exports.saasProducts = (0, pg_core_1.pgTable)('saas_products', {
-    id: (0, pg_core_1.serial)('id').primaryKey(),
-    saasId: (0, pg_core_1.text)('saas_id').notNull().unique(),
-    icon: (0, pg_core_1.text)('icon'),
-    name: (0, pg_core_1.text)('name').notNull(),
-    tag: (0, pg_core_1.text)('tag').notNull(),
-    description: (0, pg_core_1.text)('description').notNull(),
-    domain: (0, pg_core_1.text)('domain').notNull(),
-    status: (0, pg_core_1.text)('status').notNull(),
-    featured: (0, pg_core_1.text)('featured').notNull().default('false'),
-    price: (0, pg_core_1.integer)('price').notNull().default(0),
-    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow(),
-});
-exports.usersRelations = (0, drizzle_orm_1.relations)(exports.users, ({ many }) => ({
-    sessions: many(exports.sessions),
-    trackingLogs: many(exports.trackingLogs),
-    autoReplies: many(exports.autoReplies),
-    blogs: many(exports.blogs),
-}));
-exports.sessionsRelations = (0, drizzle_orm_1.relations)(exports.sessions, ({ one }) => ({
-    user: one(exports.users, {
-        fields: [exports.sessions.userId],
-        references: [exports.users.id],
-    }),
-}));
-exports.trackingLogsRelations = (0, drizzle_orm_1.relations)(exports.trackingLogs, ({ one }) => ({
-    user: one(exports.users, {
-        fields: [exports.trackingLogs.userId],
-        references: [exports.users.id],
-    }),
-}));
-exports.autoRepliesRelations = (0, drizzle_orm_1.relations)(exports.autoReplies, ({ one }) => ({
-    user: one(exports.users, {
-        fields: [exports.autoReplies.userId],
-        references: [exports.users.id],
-    }),
-}));
-exports.blogsRelations = (0, drizzle_orm_1.relations)(exports.blogs, ({ one }) => ({
-    author: one(exports.users, {
-        fields: [exports.blogs.authorId],
-        references: [exports.users.id],
-    }),
-}));
-//# sourceMappingURL=schema.js.map
+//# sourceMappingURL=ems.js.map

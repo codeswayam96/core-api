@@ -15,14 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const admin_service_1 = require("../admin/admin.service");
 const config_1 = require("@nestjs/config");
 let AuthController = class AuthController {
-    constructor(authService, configService) {
+    constructor(authService, configService, adminService) {
         this.authService = authService;
         this.configService = configService;
+        this.adminService = adminService;
+    }
+    async getSettings() {
+        return this.adminService.getAuthSettings();
     }
     async signup(body, response) {
-        const user = await this.authService.signup(body.email, body.password);
+        const user = await this.authService.signup(body.email, body.password, body.name);
         if (!user) {
             throw new common_1.UnauthorizedException('User creation failed');
         }
@@ -44,6 +49,23 @@ let AuthController = class AuthController {
         }
         const { access_token } = await this.authService.login(user);
         const domain = this.configService.get('COOKIE_DOMAIN') || 'localhost';
+        console.log(domain);
+        response.cookie('Authentication', access_token, {
+            httpOnly: true,
+            domain: domain === 'localhost' ? undefined : domain,
+            path: '/',
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+        });
+        return { message: 'Logged in successfully' };
+    }
+    async googleLogin(token, response) {
+        const authResult = await this.authService.googleLogin(token);
+        if (!authResult) {
+            throw new common_1.UnauthorizedException('Google authentication failed');
+        }
+        const { access_token } = authResult;
+        const domain = this.configService.get('COOKIE_DOMAIN') || 'localhost';
         response.cookie('Authentication', access_token, {
             httpOnly: true,
             domain: domain === 'localhost' ? undefined : domain,
@@ -55,6 +77,12 @@ let AuthController = class AuthController {
     }
 };
 exports.AuthController = AuthController;
+__decorate([
+    (0, common_1.Get)('settings'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "getSettings", null);
 __decorate([
     (0, common_1.Post)('signup'),
     __param(0, (0, common_1.Body)()),
@@ -71,9 +99,18 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('google'),
+    __param(0, (0, common_1.Body)('token')),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "googleLogin", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
-        config_1.ConfigService])
+        config_1.ConfigService,
+        admin_service_1.AdminService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

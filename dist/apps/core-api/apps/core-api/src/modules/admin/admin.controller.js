@@ -28,6 +28,12 @@ let AdminController = class AdminController {
     async updateUserRole(id, role) {
         return this.adminService.updateUserRole(id, role);
     }
+    async getAuthSettings() {
+        return this.adminService.getAuthSettings();
+    }
+    async updateAuthSettings(authType) {
+        return this.adminService.updateAuthSettings(authType);
+    }
 };
 exports.AdminController = AdminController;
 __decorate([
@@ -46,6 +52,21 @@ __decorate([
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "updateUserRole", null);
+__decorate([
+    (0, common_1.Get)('settings/auth'),
+    (0, roles_decorator_1.Roles)('admin', 'superadmin'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getAuthSettings", null);
+__decorate([
+    (0, common_1.Patch)('settings/auth'),
+    (0, roles_decorator_1.Roles)('superadmin'),
+    __param(0, (0, common_1.Body)('authType')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "updateAuthSettings", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)('admin'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

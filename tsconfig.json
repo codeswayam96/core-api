@@ -24,6 +24,12 @@
       ],
       "@core/database/*": [
         "libs/database/src/*"
+      ],
+      "@core/instagram": [
+        "libs/instagram/index"
+      ],
+      "@core/gemini": [
+        "libs/gemini/index"
       ]
     }
   }
