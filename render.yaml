@@ -7,8 +7,8 @@ services:
     env: node
     plan: free
     region: ohio
-    buildCommand: npm install && npm run build:core
-    startCommand: npm run start:prod:core
+    buildCommand: npm install --include=dev && npm run build:core
+    startCommand: node dist/apps/core-api/apps/core-api/src/main.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -39,8 +39,8 @@ services:
     env: node
     plan: free
     region: ohio
-    buildCommand: npm install && npm run build:aura
-    startCommand: npm run start:prod:aura
+    buildCommand: npm install --include=dev && npm run build:aura
+    startCommand: node dist/apps/aura-api/apps/aura-api/src/main.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -71,13 +71,13 @@ services:
     env: node
     plan: free
     region: ohio
-    buildCommand: npm install && npm run build:ems
-    startCommand: npm run start:prod:ems
+    buildCommand: npm install --include=dev && npm run build:ems
+    startCommand: node dist/apps/ems-api/apps/ems-api/src/main.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 3004
+        value: 3006
       - key: DATABASE_URL
         sync: false
       - key: JWT_SECRET

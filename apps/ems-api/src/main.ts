@@ -22,7 +22,7 @@ async function bootstrap() {
   });
 
   // Render injects PORT; fallback to EMS_PORT for local dev
-  const port = process.env.PORT || process.env.EMS_PORT || 3004;
+  const port = process.env.PORT || process.env.EMS_PORT || 3006;
   await app.listen(port, '0.0.0.0');
   console.log(`[ems-api] Server running on port ${port}`);
 }
