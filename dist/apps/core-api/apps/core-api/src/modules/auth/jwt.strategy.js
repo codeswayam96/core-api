@@ -29,7 +29,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         });
     }
     async validate(payload) {
-        return { userId: payload.sub, username: payload.username, role: payload.role };
+        return { userId: parseInt(payload.sub, 10), username: payload.username, role: payload.role };
     }
 };
 exports.JwtStrategy = JwtStrategy;
