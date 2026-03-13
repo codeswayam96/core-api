@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcryptjs';
+import { DRIZZLE_DB } from '@core/database';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import * as schema from '@core/database';
+import { eq } from 'drizzle-orm';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +17,7 @@ export class AuthService {
         private usersService: UsersService,
         private jwtService: JwtService,
         private configService: ConfigService,
+        @Inject(DRIZZLE_DB) private db: NodePgDatabase<typeof schema>,
     ) {
         this.googleClient = new OAuth2Client(this.configService.get('GOOGLE_CLIENT_ID'));
     }
@@ -44,7 +50,12 @@ export class AuthService {
 
     async validateUser(email: string, pass: string): Promise<any> {
         const user = await this.usersService.findOne(email);
-        if (user && user.password === pass) {
+        if (!user || !user.password) {
+            return null;
+        }
+
+        const isPasswordValid = await bcrypt.compare(pass, user.password);
+        if (isPasswordValid) {
             const { password, ...result } = user;
             return result;
         }
@@ -52,10 +63,19 @@ export class AuthService {
     }
 
     async signup(email: string, pass: string, name?: string): Promise<any> {
-        return await this.usersService.create({ email, password: pass, name });
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(pass, saltRounds);
+        return await this.usersService.create({ email, password: hashedPassword, name });
     }
 
     async login(user: any) {
+        // Update lastActiveAt on login
+        if (user.id) {
+            await this.db.update(schema.users)
+                .set({ lastActiveAt: new Date() })
+                .where(eq(schema.users.id, user.id))
+                .catch(() => { /* non-critical */ });
+        }
         const payload = { username: user.email, sub: user.id, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),

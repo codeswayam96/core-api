@@ -5,7 +5,7 @@ import { trackingLogs } from './misc';
 import { autoReplies } from './misc';
 import { blogs } from './marketing';
 
-export const roleEnum = pgEnum('role', ['user', 'admin', 'superadmin']);
+export const roleEnum = pgEnum('role', ['user', 'admin', 'superadmin', 'editor', 'viewer', 'subscriber']);
 
 export const appSettings = pgTable('app_settings', {
     id: serial('id').primaryKey(),
@@ -21,6 +21,8 @@ export const users = pgTable('users', {
     email: text('email').unique().notNull(),
     password: text('password'), // password is no longer required with Clerk
     role: roleEnum('role').default('user').notNull(),
+    status: text('status').default('active').notNull(), // 'active' | 'suspended' | 'pending'
+    lastActiveAt: timestamp('last_active_at'),
     createdAt: timestamp('created_at').defaultNow(),
 });
 

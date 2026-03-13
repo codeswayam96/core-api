@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, Body, UseGuards, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Body, UseGuards, ParseIntPipe, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../../shared/guards/roles.guard';
@@ -9,6 +9,18 @@ import { Roles } from '../../shared/decorators/roles.decorator';
 export class AdminController {
     constructor(private readonly adminService: AdminService) { }
 
+    @Get('dashboard')
+    @Roles('admin', 'superadmin')
+    async getDashboard() {
+        return this.adminService.getDashboard();
+    }
+
+    @Get('analytics')
+    @Roles('admin', 'superadmin')
+    async getAnalytics(@Query('range') range: string = '30d') {
+        return this.adminService.getAnalytics(range);
+    }
+
     @Get('users')
     @Roles('admin', 'superadmin')
     async listUsers() {
@@ -16,12 +28,21 @@ export class AdminController {
     }
 
     @Patch('users/:id/role')
-    @Roles('superadmin') // Only superadmin can change roles
+    @Roles('superadmin')
     async updateUserRole(
         @Param('id', ParseIntPipe) id: number,
-        @Body('role') role: 'user' | 'admin' | 'superadmin'
+        @Body('role') role: string
     ) {
         return this.adminService.updateUserRole(id, role);
+    }
+
+    @Patch('users/:id/status')
+    @Roles('admin', 'superadmin')
+    async updateUserStatus(
+        @Param('id', ParseIntPipe) id: number,
+        @Body('status') status: string
+    ) {
+        return this.adminService.updateUserStatus(id, status);
     }
 
     @Get('settings/auth')
@@ -31,7 +52,7 @@ export class AdminController {
     }
 
     @Patch('settings/auth')
-    @Roles('superadmin') // Only superadmin should change auth mode
+    @Roles('superadmin')
     async updateAuthSettings(@Body('authType') authType: string) {
         return this.adminService.updateAuthSettings(authType);
     }

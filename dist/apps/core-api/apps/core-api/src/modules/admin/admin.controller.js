@@ -22,11 +22,20 @@ let AdminController = class AdminController {
     constructor(adminService) {
         this.adminService = adminService;
     }
+    async getDashboard() {
+        return this.adminService.getDashboard();
+    }
+    async getAnalytics(range = '30d') {
+        return this.adminService.getAnalytics(range);
+    }
     async listUsers() {
         return this.adminService.listUsers();
     }
     async updateUserRole(id, role) {
         return this.adminService.updateUserRole(id, role);
+    }
+    async updateUserStatus(id, status) {
+        return this.adminService.updateUserStatus(id, status);
     }
     async getAuthSettings() {
         return this.adminService.getAuthSettings();
@@ -36,6 +45,21 @@ let AdminController = class AdminController {
     }
 };
 exports.AdminController = AdminController;
+__decorate([
+    (0, common_1.Get)('dashboard'),
+    (0, roles_decorator_1.Roles)('admin', 'superadmin'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getDashboard", null);
+__decorate([
+    (0, common_1.Get)('analytics'),
+    (0, roles_decorator_1.Roles)('admin', 'superadmin'),
+    __param(0, (0, common_1.Query)('range')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getAnalytics", null);
 __decorate([
     (0, common_1.Get)('users'),
     (0, roles_decorator_1.Roles)('admin', 'superadmin'),
@@ -52,6 +76,15 @@ __decorate([
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "updateUserRole", null);
+__decorate([
+    (0, common_1.Patch)('users/:id/status'),
+    (0, roles_decorator_1.Roles)('admin', 'superadmin'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)('status')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "updateUserStatus", null);
 __decorate([
     (0, common_1.Get)('settings/auth'),
     (0, roles_decorator_1.Roles)('admin', 'superadmin'),

@@ -20,4 +20,5 @@ __exportStar(require("./schemas/ems"), exports);
 __exportStar(require("./schemas/auraflow"), exports);
 __exportStar(require("./schemas/marketing"), exports);
 __exportStar(require("./schemas/misc"), exports);
+__exportStar(require("./schemas/analytics"), exports);
 //# sourceMappingURL=index.js.map

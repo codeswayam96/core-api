@@ -7,12 +7,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AuraApiModule);
 
   app.enableCors({
-    origin: [
-      'http://localhost:3000', // core-api & web
-      'http://localhost:3003', // auth portal
-      'http://localhost:3004', // auraflow web
-      /\.codeswayam\.com$/,
-    ],
+    origin: (origin: string, callback: (err: Error | null, allow?: boolean) => void) => {
+      if (!origin) return callback(null, true);
+      const allowedDomain = /^(https?:\/\/)?(.*\.)?codeswayam\.com$/;
+      if (allowedDomain.test(origin) || origin.includes('localhost')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
 
@@ -26,8 +30,10 @@ async function bootstrap() {
     }),
   );
 
-  const port = process.env.AURA_API_PORT || 3005;
-  await app.listen(port);
+  // Render injects PORT; fallback to AURA_API_PORT for local dev
+  const port = process.env.PORT || process.env.AURA_API_PORT || 3005;
+  await app.listen(port, '0.0.0.0');
   console.log(`[aura-api] Server running on port ${port}`);
 }
 bootstrap();
+

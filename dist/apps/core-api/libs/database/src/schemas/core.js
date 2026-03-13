@@ -6,7 +6,7 @@ const drizzle_orm_1 = require("drizzle-orm");
 const misc_1 = require("./misc");
 const misc_2 = require("./misc");
 const marketing_1 = require("./marketing");
-exports.roleEnum = (0, pg_core_1.pgEnum)('role', ['user', 'admin', 'superadmin']);
+exports.roleEnum = (0, pg_core_1.pgEnum)('role', ['user', 'admin', 'superadmin', 'editor', 'viewer', 'subscriber']);
 exports.appSettings = (0, pg_core_1.pgTable)('app_settings', {
     id: (0, pg_core_1.serial)('id').primaryKey(),
     authType: (0, pg_core_1.text)('auth_type').default('clerk').notNull(),
@@ -20,6 +20,8 @@ exports.users = (0, pg_core_1.pgTable)('users', {
     email: (0, pg_core_1.text)('email').unique().notNull(),
     password: (0, pg_core_1.text)('password'),
     role: (0, exports.roleEnum)('role').default('user').notNull(),
+    status: (0, pg_core_1.text)('status').default('active').notNull(),
+    lastActiveAt: (0, pg_core_1.timestamp)('last_active_at'),
     createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
 });
 exports.sessions = (0, pg_core_1.pgTable)('sessions', {

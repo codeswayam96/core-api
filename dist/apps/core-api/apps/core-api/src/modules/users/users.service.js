@@ -29,6 +29,7 @@ const database_1 = require("../../../../../libs/database/src");
 const node_postgres_1 = require("drizzle-orm/node-postgres");
 const schema = require("../../../../../libs/database/src");
 const drizzle_orm_1 = require("drizzle-orm");
+const bcrypt = require("bcryptjs");
 let UsersService = class UsersService {
     constructor(db) {
         this.db = db;
@@ -72,6 +73,40 @@ let UsersService = class UsersService {
             password: '',
         }).returning();
         return user;
+    }
+    async updateProfile(id, data) {
+        const [updated] = await this.db.update(schema.users)
+            .set(data)
+            .where((0, drizzle_orm_1.eq)(schema.users.id, id))
+            .returning();
+        if (updated) {
+            const { password } = updated, user = __rest(updated, ["password"]);
+            return user;
+        }
+        return null;
+    }
+    async changePassword(id, currentPassword, newPassword) {
+        const user = await this.db.query.users.findFirst({
+            where: (0, drizzle_orm_1.eq)(schema.users.id, id),
+        });
+        if (!user)
+            throw new common_1.BadRequestException('User not found');
+        if (!user.password || user.password === '') {
+            throw new common_1.BadRequestException('Cannot change password for OAuth accounts. Use your provider to manage credentials.');
+        }
+        const valid = await bcrypt.compare(currentPassword, user.password);
+        if (!valid)
+            throw new common_1.BadRequestException('Current password is incorrect');
+        const hashed = await bcrypt.hash(newPassword, 10);
+        await this.db.update(schema.users)
+            .set({ password: hashed })
+            .where((0, drizzle_orm_1.eq)(schema.users.id, id));
+        return { message: 'Password updated successfully' };
+    }
+    async deleteAccount(id) {
+        await this.db.delete(schema.sessions).where((0, drizzle_orm_1.eq)(schema.sessions.userId, id));
+        await this.db.delete(schema.users).where((0, drizzle_orm_1.eq)(schema.users.id, id));
+        return { message: 'Account deleted successfully' };
     }
     async createFromClerk(clerkId, email) {
         const existing = await this.findOne(email);

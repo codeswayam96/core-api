@@ -48,10 +48,10 @@ let AutomationsService = class AutomationsService {
             throw new common_1.NotFoundException('Automation not found');
         return automation;
     }
-    async createAutomation(userId) {
+    async createAutomation(userId, name) {
         const id = (0, uuid_1.v4)();
         const [automation] = await this.db.insert(schema.afAutomations)
-            .values({ id, userId, name: 'Untitled' })
+            .values({ id, userId, name: (name === null || name === void 0 ? void 0 : name.trim()) || 'Untitled' })
             .returning();
         return automation;
     }

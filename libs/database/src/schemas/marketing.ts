@@ -12,6 +12,9 @@ export const blogs = pgTable('blogs', {
     excerpt: text('excerpt').notNull(),
     content: text('content').notNull(),
     featured: text('featured').notNull().default('false'),
+    status: text('status').notNull().default('draft'), // 'published' | 'draft' | 'archived'
+    views: integer('views').notNull().default(0),
+    category: text('category').notNull().default(''),
     authorId: integer('author_id').notNull().references(() => users.id),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
@@ -25,9 +28,10 @@ export const saasProducts = pgTable('saas_products', {
     tag: text('tag').notNull(),
     description: text('description').notNull(),
     domain: text('domain').notNull(),
-    status: text('status').notNull(), // 'Live' | 'Beta' | 'Soon'
+    status: text('status').notNull(), // 'Active' | 'Beta' | 'Coming Soon'
     featured: text('featured').notNull().default('false'),
     price: integer('price').notNull().default(0),
+    subscribers: integer('subscribers').notNull().default(0),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
 });

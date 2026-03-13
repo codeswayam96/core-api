@@ -31,7 +31,7 @@ export class BlogsController {
     @Patch(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles('admin', 'superadmin')
-    update(@Param('id', ParseIntPipe) id: number, @Body() updateBlogDto: { saas?: string; tag?: string; title?: string; slug?: string; excerpt?: string; content?: string; featured?: string }) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateBlogDto: { saas?: string; tag?: string; title?: string; slug?: string; excerpt?: string; content?: string; featured?: string; status?: string; views?: number; category?: string }) {
         return this.blogsService.update(id, updateBlogDto);
     }
 

@@ -20,12 +20,12 @@ export class SaasProductsService {
         return result;
     }
 
-    async create(data: { saasId: string; icon?: string; name: string; tag: string; description: string; domain: string; status: string; featured?: string; price?: number }) {
+    async create(data: { saasId: string; icon?: string; name: string; tag: string; description: string; domain: string; status: string; featured?: string; price?: number; subscribers?: number }) {
         const [product] = await this.db.insert(schema.saasProducts).values(data).returning();
         return product;
     }
 
-    async update(id: number, data: { saasId?: string; icon?: string; name?: string; tag?: string; description?: string; domain?: string; status?: string; featured?: string; price?: number }) {
+    async update(id: number, data: { saasId?: string; icon?: string; name?: string; tag?: string; description?: string; domain?: string; status?: string; featured?: string; price?: number; subscribers?: number }) {
         const [product] = await this.db.update(schema.saasProducts)
             .set({ ...data, updatedAt: new Date() })
             .where(eq(schema.saasProducts.id, id))

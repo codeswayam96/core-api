@@ -23,7 +23,27 @@ let BlogsService = class BlogsService {
         this.db = db;
     }
     async findAll() {
-        return this.db.select().from(schema.blogs);
+        const rows = await this.db
+            .select({
+            id: schema.blogs.id,
+            saas: schema.blogs.saas,
+            tag: schema.blogs.tag,
+            title: schema.blogs.title,
+            slug: schema.blogs.slug,
+            excerpt: schema.blogs.excerpt,
+            featured: schema.blogs.featured,
+            status: schema.blogs.status,
+            views: schema.blogs.views,
+            category: schema.blogs.category,
+            authorId: schema.blogs.authorId,
+            authorName: schema.users.name,
+            authorEmail: schema.users.email,
+            createdAt: schema.blogs.createdAt,
+            updatedAt: schema.blogs.updatedAt,
+        })
+            .from(schema.blogs)
+            .leftJoin(schema.users, (0, drizzle_orm_1.eq)(schema.blogs.authorId, schema.users.id));
+        return rows;
     }
     async findOne(id) {
         const result = await this.db.query.blogs.findFirst({

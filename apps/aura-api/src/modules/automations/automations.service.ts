@@ -36,10 +36,10 @@ export class AutomationsService {
         return automation;
     }
 
-    async createAutomation(userId: number) {
+    async createAutomation(userId: number, name?: string) {
         const id = uuidv4();
         const [automation] = await this.db.insert(schema.afAutomations)
-            .values({ id, userId, name: 'Untitled' })
+            .values({ id, userId, name: name?.trim() || 'Untitled' })
             .returning();
         return automation;
     }

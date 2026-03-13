@@ -21,19 +21,19 @@ let AutomationsController = class AutomationsController {
         this.automationsService = automationsService;
     }
     getUserAutomations(req) {
-        return this.automationsService.getUserAutomations(req.user.userId);
+        return this.automationsService.getUserAutomations(Number(req.user.userId));
     }
     getAutomation(id, req) {
-        return this.automationsService.getAutomation(id, req.user.userId);
+        return this.automationsService.getAutomation(id, Number(req.user.userId));
     }
-    createAutomation(req) {
-        return this.automationsService.createAutomation(req.user.userId);
+    createAutomation(data, req) {
+        return this.automationsService.createAutomation(Number(req.user.userId), data === null || data === void 0 ? void 0 : data.name);
     }
     updateAutomation(id, data, req) {
-        return this.automationsService.updateAutomation(id, req.user.userId, data);
+        return this.automationsService.updateAutomation(id, Number(req.user.userId), data);
     }
     deleteAutomation(id, req) {
-        return this.automationsService.deleteAutomation(id, req.user.userId);
+        return this.automationsService.deleteAutomation(id, Number(req.user.userId));
     }
 };
 exports.AutomationsController = AutomationsController;
@@ -54,9 +54,10 @@ __decorate([
 ], AutomationsController.prototype, "getAutomation", null);
 __decorate([
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Req)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], AutomationsController.prototype, "createAutomation", null);
 __decorate([

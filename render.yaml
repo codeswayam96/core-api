@@ -1,15 +1,86 @@
 services:
+  # ──────────────────────────────────────────────────────
+  # core-api  — Auth, Users, Admin, Blogs, SaaS Products
+  # ──────────────────────────────────────────────────────
   - type: web
     name: codeswayam-core-api
     env: node
     plan: free
     region: ohio
-    buildCommand: npm install && npm run build
-    startCommand: npm run start:prod
+    buildCommand: npm install && npm run build:core
+    startCommand: npm run start:prod:core
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 3000
       - key: DATABASE_URL
-        sync: false # Set this in the Render dashboard
+        sync: false   # Set in Render dashboard
       - key: JWT_SECRET
-        sync: false # Set this in the Render dashboard
+        sync: false   # Set in Render dashboard
+      - key: COOKIE_DOMAIN
+        value: .codeswayam.com
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: REDIS_TLS
+        value: "true"
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+
+  # ──────────────────────────────────────────────────────
+  # aura-api  — Automations, Integrations, Webhooks
+  # ──────────────────────────────────────────────────────
+  - type: web
+    name: codeswayam-aura-api
+    env: node
+    plan: free
+    region: ohio
+    buildCommand: npm install && npm run build:aura
+    startCommand: npm run start:prod:aura
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3005
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: COOKIE_DOMAIN
+        value: .codeswayam.com
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: REDIS_TLS
+        value: "true"
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # ──────────────────────────────────────────────────────
+  # ems-api  — Employee Management, Tasks, Meetings, Tracking
+  # ──────────────────────────────────────────────────────
+  - type: web
+    name: codeswayam-ems-api
+    env: node
+    plan: free
+    region: ohio
+    buildCommand: npm install && npm run build:ems
+    startCommand: npm run start:prod:ems
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3004
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: COOKIE_DOMAIN
+        value: .codeswayam.com

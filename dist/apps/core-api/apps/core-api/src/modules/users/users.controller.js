@@ -26,6 +26,21 @@ let UsersController = class UsersController {
     async getProfile(req) {
         return this.usersService.findById(req.user.userId);
     }
+    async updateProfile(req, body) {
+        return this.usersService.updateProfile(req.user.userId, { name: body.name });
+    }
+    async changePassword(req, body) {
+        if (!body.currentPassword || !body.newPassword) {
+            throw new common_1.BadRequestException('Both current and new password are required');
+        }
+        if (body.newPassword.length < 6) {
+            throw new common_1.BadRequestException('New password must be at least 6 characters');
+        }
+        return this.usersService.changePassword(req.user.userId, body.currentPassword, body.newPassword);
+    }
+    async deleteAccount(req) {
+        return this.usersService.deleteAccount(req.user.userId);
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -43,6 +58,32 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getProfile", null);
+__decorate([
+    (0, common_1.Patch)('profile'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updateProfile", null);
+__decorate([
+    (0, common_1.Post)('change-password'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "changePassword", null);
+__decorate([
+    (0, common_1.Delete)('account'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "deleteAccount", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])

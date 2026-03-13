@@ -9,26 +9,26 @@ export class AutomationsController {
 
     @Get()
     getUserAutomations(@Req() req) {
-        return this.automationsService.getUserAutomations(req.user.userId);
+           return this.automationsService.getUserAutomations(Number(req.user.userId));
     }
 
     @Get(':id')
     getAutomation(@Param('id') id: string, @Req() req) {
-        return this.automationsService.getAutomation(id, req.user.userId);
+           return this.automationsService.getAutomation(id, Number(req.user.userId));
     }
 
     @Post()
-    createAutomation(@Req() req) {
-        return this.automationsService.createAutomation(req.user.userId);
+    createAutomation(@Body() data: any, @Req() req) {
+           return this.automationsService.createAutomation(Number(req.user.userId), data?.name);
     }
 
     @Put(':id')
     updateAutomation(@Param('id') id: string, @Body() data: any, @Req() req) {
-        return this.automationsService.updateAutomation(id, req.user.userId, data);
+           return this.automationsService.updateAutomation(id, Number(req.user.userId), data);
     }
 
     @Delete(':id')
     deleteAutomation(@Param('id') id: string, @Req() req) {
-        return this.automationsService.deleteAutomation(id, req.user.userId);
+           return this.automationsService.deleteAutomation(id, Number(req.user.userId));
     }
 }

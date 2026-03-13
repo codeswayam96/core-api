@@ -10,15 +10,6 @@
   "monorepo": true,
   "root": "apps/core-api",
   "projects": {
-    "aura-api": {
-      "type": "application",
-      "root": "apps/aura-api",
-      "entryFile": "main",
-      "sourceRoot": "apps/aura-api/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/aura-api/tsconfig.app.json"
-      }
-    },
     "core-api": {
       "type": "application",
       "root": "apps/core-api",
@@ -28,13 +19,13 @@
         "tsConfigPath": "apps/core-api/tsconfig.app.json"
       }
     },
-    "database": {
-      "type": "library",
-      "root": "libs/database",
-      "entryFile": "index",
-      "sourceRoot": "libs/database/src",
+    "aura-api": {
+      "type": "application",
+      "root": "apps/aura-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/aura-api/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/database/tsconfig.lib.json"
+        "tsConfigPath": "apps/aura-api/tsconfig.app.json"
       }
     },
     "ems-api": {
@@ -46,22 +37,13 @@
         "tsConfigPath": "apps/ems-api/tsconfig.app.json"
       }
     },
-    "instadm-api": {
-      "type": "application",
-      "root": "apps/instadm-api",
-      "entryFile": "main",
-      "sourceRoot": "apps/instadm-api/src",
+    "database": {
+      "type": "library",
+      "root": "libs/database",
+      "entryFile": "index",
+      "sourceRoot": "libs/database/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/instadm-api/tsconfig.app.json"
-      }
-    },
-    "mailtracker-api": {
-      "type": "application",
-      "root": "apps/mailtracker-api",
-      "entryFile": "main",
-      "sourceRoot": "apps/mailtracker-api/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/mailtracker-api/tsconfig.app.json"
+        "tsConfigPath": "libs/database/tsconfig.lib.json"
       }
     }
   }

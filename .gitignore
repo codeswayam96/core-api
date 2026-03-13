@@ -1,5 +1,52 @@
+# ─── Dependencies ────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.*
+
+# ─── Build output ────────────────────────────────────────────────
+dist/
+build/
+
+# ─── Environment files ───────────────────────────────────────────
 .env
-node_modules
-.env
-env
+.env.*
+!.env.example
+
+# ─── Logs ────────────────────────────────────────────────────────
+*.log
+*.log.*
+logs/
+out.log
+error.log
+stderr.txt
+stdout.txt
+
+# ─── Debug / temp output files ───────────────────────────────────
+build_output.txt
+lint_output.txt
+ts_errors.txt
+ts_errors_node.txt
+typescript_errors.txt
+*.tmp
+*.temp
+
+# ─── TypeScript incremental build info ───────────────────────────
+*.tsbuildinfo
+
+# ─── Turbo ───────────────────────────────────────────────────────
+.turbo/
+
+# ─── OS artefacts ────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Editor ──────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
