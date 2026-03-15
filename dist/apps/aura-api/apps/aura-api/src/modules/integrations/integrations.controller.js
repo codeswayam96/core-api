@@ -20,6 +20,9 @@ let IntegrationsController = class IntegrationsController {
     constructor(integrationsService) {
         this.integrationsService = integrationsService;
     }
+    getAllIntegrations(req) {
+        return this.integrationsService.getAllIntegrations(req.user.userId);
+    }
     getInstagramPosts(req) {
         return this.integrationsService.getInstagramPosts(req.user.userId);
     }
@@ -31,6 +34,13 @@ let IntegrationsController = class IntegrationsController {
     }
 };
 exports.IntegrationsController = IntegrationsController;
+__decorate([
+    (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], IntegrationsController.prototype, "getAllIntegrations", null);
 __decorate([
     (0, common_1.Get)('instagram/posts'),
     __param(0, (0, common_1.Req)()),

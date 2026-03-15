@@ -18,7 +18,7 @@ export class UsersService {
 
     async findById(id: number) {
         const result = await this.db.query.users.findFirst({
-            where: eq(schema.users.id, id),
+            where: eq(schema.users.id, id)
         });
         if (result) {
             const { password, ...user } = result;

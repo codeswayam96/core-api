@@ -42,7 +42,7 @@ let UsersService = class UsersService {
     }
     async findById(id) {
         const result = await this.db.query.users.findFirst({
-            where: (0, drizzle_orm_1.eq)(schema.users.id, id),
+            where: (0, drizzle_orm_1.eq)(schema.users.id, id)
         });
         if (result) {
             const { password } = result, user = __rest(result, ["password"]);

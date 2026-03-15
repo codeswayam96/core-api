@@ -24,6 +24,12 @@ let IntegrationsService = class IntegrationsService {
     constructor(db) {
         this.db = db;
     }
+    async getAllIntegrations(userId) {
+        const integrations = await this.db.query.afIntegrations.findMany({
+            where: (0, drizzle_orm_1.eq)(schema.afIntegrations.userId, userId)
+        });
+        return integrations;
+    }
     async getInstagramPosts(userId) {
         const integration = await this.db.query.afIntegrations.findFirst({
             where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema.afIntegrations.userId, userId), (0, drizzle_orm_1.eq)(schema.afIntegrations.name, 'INSTAGRAM'))
@@ -58,6 +64,9 @@ let IntegrationsService = class IntegrationsService {
     }
     async createIntegration(data) {
         await this.db.delete(schema.afIntegrations).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema.afIntegrations.userId, data.userId), (0, drizzle_orm_1.eq)(schema.afIntegrations.name, data.name)));
+        if (data.instagramId) {
+            await this.db.delete(schema.afIntegrations).where((0, drizzle_orm_1.eq)(schema.afIntegrations.instagramId, data.instagramId));
+        }
         const id = (0, uuid_1.v4)();
         await this.db.insert(schema.afIntegrations).values({
             id,

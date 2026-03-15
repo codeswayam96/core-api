@@ -7,6 +7,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class IntegrationsController {
     constructor(private readonly integrationsService: IntegrationsService) { }
 
+    @Get()
+    getAllIntegrations(@Req() req) {
+        return this.integrationsService.getAllIntegrations(req.user.userId);
+    }
+
     @Get('instagram/posts')
     getInstagramPosts(@Req() req) {
         return this.integrationsService.getInstagramPosts(req.user.userId);

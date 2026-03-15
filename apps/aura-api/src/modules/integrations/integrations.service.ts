@@ -10,6 +10,13 @@ import { v4 as uuidv4 } from 'uuid';
 export class IntegrationsService {
     constructor(@Inject(DRIZZLE_DB) private db: NodePgDatabase<typeof schema>) { }
 
+    async getAllIntegrations(userId: number) {
+        const integrations = await this.db.query.afIntegrations.findMany({
+            where: eq(schema.afIntegrations.userId, userId)
+        });
+        return integrations;
+    }
+
     async getInstagramPosts(userId: number) {
         const integration = await this.db.query.afIntegrations.findFirst({
             where: and(
@@ -61,13 +68,21 @@ export class IntegrationsService {
         pageId?: string;
         name: 'INSTAGRAM';
     }) {
-        // Delete existing to prevent duplicates
+        // Delete existing integration for this user to prevent duplicates
         await this.db.delete(schema.afIntegrations).where(
             and(
                 eq(schema.afIntegrations.userId, data.userId),
                 eq(schema.afIntegrations.name, data.name)
             )
         );
+
+        // If instagramId is provided, also delete any integration with the same instagramId
+        // (in case another user had it before, or to handle reconnection)
+        if (data.instagramId) {
+            await this.db.delete(schema.afIntegrations).where(
+                eq(schema.afIntegrations.instagramId, data.instagramId)
+            );
+        }
 
         const id = uuidv4();
         await this.db.insert(schema.afIntegrations).values({
